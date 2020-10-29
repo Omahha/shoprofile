@@ -1,18 +1,63 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<v-row class="mr-0 ml-0 fill-height">
+<v-carousel v-model="model" hide-delimiters show-arrows-on-hover height="100%" cycle>
+    <v-carousel-item
+      v-for="(value, i) in homePhotos"
+      :key="i"
+    >
+      <v-sheet
+        color="#fff"
+        height="100%"
+        tile
+        class="d-flex align-center"
+      >
+        <v-img
+          :src="value.path"
+          :height="$vuetify.breakpoint.smAndUp ? '100vh': '100%'"
+          width="100%">
+        </v-img>
+        <!-- <v-row
+          class="fill-height"
+          align="center"
+          justify="center"
+        >
+          <div class="display-3">
+            Slide {{ i + 1 }}
+          </div>
+        </v-row> -->
+      </v-sheet>
+    </v-carousel-item>
+  </v-carousel>
+</v-row>
+
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'Home',
+  data () {
+    return {
+      model: 0,
+      colors: [
+        'primary',
+        'secondary',
+        'yellow darken-2',
+        'red',
+        'orange'
+      ]
+    }
+  },
   components: {
-    HelloWorld
+  },
+  created () {
+    this.$store.dispatch('fetchPhotos', {
+      type: 'home'
+    })
+  },
+  computed: {
+    homePhotos () {
+      return this.$store.getters.homePhotos
+    }
   }
 }
 </script>
