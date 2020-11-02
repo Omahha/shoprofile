@@ -1,6 +1,12 @@
 <template>
 <v-row class="mr-0 ml-0 fill-height">
-<v-carousel v-model="model" hide-delimiters show-arrows-on-hover height="100%" cycle>
+<v-carousel
+  v-model="model"
+  hide-delimiters
+  show-arrows-on-hover
+  height="100%"
+  cycle
+  interval="4000">
     <v-carousel-item
       v-for="(value, i) in homePhotos"
       :key="i"
@@ -13,7 +19,7 @@
       >
         <v-img
           :src="value.path"
-          :height="$vuetify.breakpoint.smAndUp ? '100vh': '100%'"
+          max-height="100vh"
           width="100%">
         </v-img>
         <!-- <v-row

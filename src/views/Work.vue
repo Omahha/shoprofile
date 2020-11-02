@@ -16,13 +16,14 @@
             >
 
               <v-sheet
-                color="#d9d9d9"
+                color="#fff"
                 height="100%"
                 tile
+                class="d-flex align-center"
               >
                 <v-img
                   :src="value.path"
-                  :height="picHeight"
+                  width="100%"
                   :class="{'profileImage': true, 'profileImage_active': !loading}"
                   @load="setLoading"
                   @click="toggleDialog(value.path)">
