@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font">
     <v-row justify="space-between">
       <div class="pr-0 pl-0" @click="hideMenu">
         <router-link
@@ -273,6 +273,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-application .text-h6 {
+  font-family: 'Skia' !important;
+}
 a {
   text-decoration: none;
   // color: black;

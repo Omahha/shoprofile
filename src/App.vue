@@ -27,7 +27,7 @@
                         titleWindow: $vuetify.breakpoint.smAndUp,
                         titleMobile: $vuetify.breakpoint.mobile
                       }"
-                      class="home mb-0">
+                      class="home mb-0 font">
                         SHO OTANI
                       </router-link>
                   </v-col>
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import '../src/scss/styles.scss'
 import Menu from './components/Menu.vue'
 export default {
   name: 'App',
