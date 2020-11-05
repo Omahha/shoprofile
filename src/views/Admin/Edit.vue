@@ -33,6 +33,15 @@
                       :items="selectItemList"
                       item-text="value"
                       item-value="id"
+                      label="Type"
+                    ></v-select>
+
+                    <v-select
+                      v-model="selectRequestPasswordItem"
+                      :items="selectRequestPasswordList"
+                      item-text="value"
+                      item-value="id"
+                      label="Require Password"
                     ></v-select>
                   </v-form>
                 </v-col>
@@ -197,7 +206,7 @@
                           class="white--text"
                           style="position: absolute; z-index: 100; bottom:-10%"
                           @click.prevent="deletePhoto(v.id, value.id)">
-                          Delete {{ v.id }}
+                          Delete {{ v.id }} {{ v.requirePassword  === '0' ? 'no': 'yes' }}
                         </v-btn>
                     </v-card>
                   </v-slide-item>
@@ -290,6 +299,11 @@ export default {
         { id: 2, value: 'graphic' },
         { id: 3, value: 'illustration' },
         { id: 4, value: 'home' }
+      ],
+      selectRequestPasswordItem: 0,
+      selectRequestPasswordList: [
+        { id: 0, value: 'no' },
+        { id: 1, value: 'yes' }
       ],
 
       setSelectItem: null,
@@ -556,10 +570,11 @@ export default {
     register () {
       this.$store.dispatch('storePhoto', {
         path: this.data.photo,
-        type: this.selectItem
+        type: this.selectItem,
+        requirePassword: this.selectRequestPasswordItem
       })
       this.dialog = false
-      console.log(this.data.photo)
+      // console.log(this.data.photo)
     },
     setRegister () {
       this.$store.dispatch('storeSetPhoto', {

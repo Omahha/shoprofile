@@ -90,12 +90,12 @@ export default {
       return top
     },
     menuMarginBottom () {
-      let mb
-      if (this.$route.name === 'Home' && this.$vuetify.breakpoint.mobile) {
-        mb = '90px'
-      } else {
-        mb = '0px'
-      }
+      const mb = '90px'
+      // if (this.$route.name === 'Home' && this.$vuetify.breakpoint.mobile) {
+      //   mb = '90px'
+      // } else {
+      //   mb = '0px'
+      // }
       return {
         'margin-bottom': mb
       }

@@ -51,21 +51,86 @@
         </v-dialog>
         <!-- ------------------------ -->
 
+        <!-- password modal------------------------------- -->
+        <v-dialog
+          v-model="passwordDialog"
+          max-width="300px">
+          <v-app-bar
+            color="blue-grey darken-4"
+            dark>
+            <v-toolbar-title>Password</v-toolbar-title>
+          </v-app-bar>
+
+            <v-card tile>
+              <v-card-text class="pt-5">
+                <v-row>
+                  <v-col>
+                    <v-form class="d-flex justify-center">
+                      <v-text-field
+                        v-model="data.password"
+                        type="text"
+                        label="PASSWORD"
+                        style="maxWidth: 100%"
+                        @blur="$v.data.password.$touch()"
+                        :error-messages="passwordErrors">
+                      </v-text-field>
+                    </v-form>
+                  </v-col>
+                </v-row>
+            </v-card-text>
+
+            <v-card-text>
+              <v-row justify="center">
+                <v-col cols="10">
+                  <v-row justify="center">
+                    <v-btn tile
+                      color="primary"
+                      class="white--text"
+                      :disabled="$v.$invalid"
+                      @click.prevent="showHiddenPhoto">
+                      Enter
+                    </v-btn>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
+        <!-- ------------------------------------- -->
+
         <v-row class="ml-0 mr-0 mt-5" justify="start" :style="{paddingLeft: picWidth.listPadding}">
+
           <v-slide-group show-arrows mandatory center-active style="width:90%;">
             <v-slide-item v-for="(i, index) in combineData" :key="index" v-slot:default="{ active, toggle }">
-              <v-card class="ma-4 d-flex align-center" height="50px" width="50px" :elevation="active ? 10 : 0" @click="toggle">
-                <v-img :src="i[0].path" @click="resetMainIdAndArrayId(index)"></v-img>
-              </v-card>
+              <div>
+                <v-card class="ma-4 d-flex align-center" height="50px" width="50px" :elevation="active ? 10 : 0" @click="toggle" v-if="i[0].requirePassword === '0'">
+                  <v-img :src="i[0].path" @click="resetMainIdAndArrayId(index)"></v-img>
+                </v-card>
+                <v-card class="ma-4 d-flex align-center" height="50px" width="50px" :elevation="active ? 10 : 0" @click="toggle" v-if="i[0].requirePassword === '1' && hiddenPhotoFlag">
+                  <v-img :src="i[0].path" @click="resetMainIdAndArrayId(index)"></v-img>
+                </v-card>
+              </div>
+
             </v-slide-item>
           </v-slide-group>
+
+        </v-row>
+        <v-row class="ml-0 mr-5 mt-5" justify="end" v-show="showMoreBtn">
+          <p class="moreIcon" @click="passwordDialog = true"><v-icon class="mr-2">fas fa-plus</v-icon><span style="font-family: 'Skia'; font-size: 1.6em">more</span></p>
         </v-row>
       </v-col>
     </v-row>
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators'
+import { handleErrorsMixin } from '../formCheckMixin'
+import axios from 'axios'
+
 export default {
+  mixins: [handleErrorsMixin],
+
   data () {
     return {
       loading: true,
@@ -100,13 +165,27 @@ export default {
         { id: 12, src: 'https://dummyimage.com/d6d6d6/0ff00f.jpg&text=PHOTO' }
       ],
       dialog: false,
-      modalImagePath: null
+      modalImagePath: null,
+      showMoreBtn: false,
+      passwordDialog: false,
+      data: {
+        password: null
+      },
+      selectedEvent: null,
+      hiddenPhotoFlag: false
     }
   },
   props: {
     picListData: Array,
     setListData: Array,
     combineData: Array
+  },
+  validations: {
+    data: {
+      password: {
+        required
+      }
+    }
   },
   computed: {
     picWidth () {
@@ -140,6 +219,9 @@ export default {
         }
       }
       return flag
+    },
+    passwordErrors () {
+      return this.handleErrors('password')
     }
   },
   watch: {
@@ -150,13 +232,26 @@ export default {
       // console.log(this.combineData)
     }
   },
+  created () {
+    this.$store.dispatch('fetchHasPassword')
+  },
   beforeUpdate () {
     if (this.arrayId === null) {
       this.arrayId = 0
       this.mainId = 0
     }
+    const str = this.$route.path
+    const route = str.substring(1, str.length)
+    this.selectedEvent = route
+    const getters = this.$store.getters.hasPassword[route]
+    if (getters === 'yes' && !this.hiddenPhotoFlag) {
+      this.showMoreBtn = true
+    } else {
+      this.showMoreBtn = false
+    }
   },
   methods: {
+    /* eslint-disable func-call-spacing */
     setLoading () {
       this.loading = false
     },
@@ -168,6 +263,32 @@ export default {
       this.dialog = true
       this.modalImagePath = null
       this.modalImagePath = path
+    },
+    showHiddenPhoto () {
+      const passwordData = {
+        type: this.selectedEvent,
+        password: this.data.password
+      }
+      var formData = new FormData()
+      for (const key in passwordData) {
+        formData.append(key, passwordData[key])
+      }
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      }
+      axios.post ('/checkPassword', formData, config)
+        .then (res => {
+          const data = res.data.data
+          if (data === 'pass') {
+            this.passwordDialog = false
+            this.hiddenPhotoFlag = true
+            this.showMoreBtn = false
+          } else {
+            this.passwordDialog = false
+          }
+        })
     }
   }
 }
@@ -187,6 +308,13 @@ export default {
   &_active {
     opacity: 1;
     position: relative;
+  }
+}
+.moreIcon {
+  transition: all 1s;
+  &:hover {
+    cursor: pointer;
+    text-shadow: 0 0 5px #999;
   }
 }
 </style>

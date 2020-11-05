@@ -36,7 +36,7 @@
                 href="#"
                 class="pb-3 submenuStyle"
                 v-if="menu"
-                @click.prevent="checkOpenPasswordModal(0)"
+                @click.prevent="toWork(0)"
                 id="textile">
                   <span :class="{
                     focusClass: setFocus==='textile'
@@ -64,7 +64,7 @@
                   menu2Mobile: $vuetify.breakpoint.mobile
                 }"
                 v-if="menu"
-                @click.prevent="checkOpenPasswordModal(1)"
+                @click.prevent="toWork(1)"
                 id="graphic">
                   <span :class="{
                     focusClass: setFocus==='graphic'
@@ -92,7 +92,7 @@
                   menu3Mobile: $vuetify.breakpoint.mobile
                 }"
                 v-if="menu"
-                @click.prevent="checkOpenPasswordModal(2)"
+                @click.prevent="toWork(2)"
                 id="illustration">
                   <span :class="{
                     focusClass: setFocus==='illustration'
@@ -112,8 +112,8 @@
         </router-link>
       </div>
 
-      <!-- ------------------------------- -->
-        <v-dialog
+      <!-- password modal ------------------------------- -->
+        <!-- <v-dialog
           v-model="dialog"
           max-width="300px">
           <v-app-bar
@@ -156,19 +156,19 @@
               </v-row>
             </v-card-text>
           </v-card>
-        </v-dialog>
+        </v-dialog> -->
 
         <!-- ------------------------------------- -->
     </v-row>
   </div>
 </template>
 <script>
-import { required } from 'vuelidate/lib/validators'
-import { handleErrorsMixin } from '../formCheckMixin'
+// import { required } from 'vuelidate/lib/validators'
+// import { handleErrorsMixin } from '../formCheckMixin'
 import axios from 'axios'
 
 export default {
-  mixins: [handleErrorsMixin],
+  // mixins: [handleErrorsMixin],
 
   data () {
     return {
@@ -180,10 +180,10 @@ export default {
         backgroundColor: 'black',
         transition: 'all 1.1s'
       },
-      dialog: false,
-      data: {
-        password: null
-      },
+      // dialog: false,
+      // data: {
+      //   password: null
+      // },
       selectedEvent: null
     }
   },
@@ -194,13 +194,13 @@ export default {
     submenuLineHeight: String,
     lineTop: String
   },
-  validations: {
-    data: {
-      password: {
-        required
-      }
-    }
-  },
+  // validations: {
+  //   data: {
+  //     password: {
+  //       required
+  //     }
+  //   }
+  // },
   created () {
     if (this.$vuetify.breakpoint.smAndUp) {
       this.submenuLine.top = '40px'
@@ -210,9 +210,9 @@ export default {
     this.$store.dispatch('fetchHasPassword')
   },
   computed: {
-    passwordErrors () {
-      return this.handleErrors('password')
-    },
+    // passwordErrors () {
+    //   return this.handleErrors('password')
+    // },
     setFocus () {
       const str = this.$route.path
       return str.substring(1, str.length)
@@ -251,7 +251,6 @@ export default {
             if (this.$route.path !== ('/' + this.selectedEvent)) {
               this.$router.push('/' + this.selectedEvent)
             }
-            // document.getElementById(this.selectedEvent).focus()
           } else {
             this.dialog = false
           }
@@ -267,13 +266,17 @@ export default {
           this.$router.push('/' + typeArray[type])
         }
       }
+    },
+    toWork (type) {
+      const typeArray = ['textile', 'graphic', 'illustration']
+      this.$router.push('/' + typeArray[type])
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.v-application .text-h6 {
+.v-application .text-h6, .v-application .text-subtitle-2 {
   font-family: 'Skia' !important;
 }
 a {
