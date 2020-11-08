@@ -11,7 +11,8 @@ Vue.config.productionTip = false
 
 Vue.use(Vuelidate)
 
-axios.defaults.baseURL = 'http://shoprofileapi.test:1443/api'
+// axios.defaults.baseURL = 'http://shoprofileapi.test:1443/api'
+axios.defaults.baseURL = 'https://sho-profile-api.herokuapp.com/api'
 
 new Vue({
   router,
