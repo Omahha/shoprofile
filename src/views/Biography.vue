@@ -11,7 +11,7 @@
             @load="setLoading">
           </v-img> -->
           <v-img
-            src="https://dummyimage.com/d6d6d6/ff00ff.jpg&text=PHOTO"
+            src="/img/profile/profile.jpg"
             max-height="50vh"
             max-width="80%"
             :aspect-ratio="19/27"
