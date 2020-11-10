@@ -64,8 +64,8 @@ export default {
   data () {
     return {
       data: {
-        email: 'test@test.com',
-        password: 'password'
+        email: null,
+        password: null
       }
     }
   },
