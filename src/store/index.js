@@ -325,6 +325,7 @@ export default new Vuex.Store({
       axios.post('photos', formData, config)
         .then (res => {
           const data = res.data.data
+          // console.log(data)
           commit ('ADD_PHOTO', data)
         })
     },
@@ -348,6 +349,7 @@ export default new Vuex.Store({
       axios.delete ('photos/' + idData.id)
         .then (res => {
           commit ('REMOVE_PHOTO', idData)
+          // console.log(res.data.data)
         })
     },
     deleteSetPhoto ({ commit }, idData) {
